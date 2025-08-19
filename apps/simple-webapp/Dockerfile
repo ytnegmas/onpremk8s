@@ -10,7 +10,8 @@ LABEL org.opencontainers.image.title="simple-webapp" \
       org.opencontainers.image.revision="${GIT_SHA}"
 
 # non root for security
-RUN adduser -u 1001 -D appuser
+RUN groupadd -g 1001 appgroup \
+    && useradd -u 1001 -g appgroup -s /bin/bash -m appuser
 
 WORKDIR /app
 COPY requirements.txt .
