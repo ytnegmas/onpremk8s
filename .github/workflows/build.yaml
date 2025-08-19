@@ -86,8 +86,8 @@ jobs:
 
       - name: Commit and push updated digest
         run: |
-          git config user.name "ytnegsam"
-          git config user.email "ytnegsam@gmail.com"
+          git config user.name "ytnegmas"
+          git config user.email "ytnegmas@gmail.com"
           git add ./gitops/helm/simple-webapp/values.yaml
           git commit -m "Update simple-webapp digest to ${{ steps.build.outputs.digest }}"
           git push
