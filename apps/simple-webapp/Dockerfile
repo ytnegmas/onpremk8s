@@ -1,6 +1,6 @@
 FROM python:3.12-slim
 
-ARG GIT_SHA=unknown
+ARG BUILD_SHA=unknown
 ENV APP_NAME="simple-webapp" \
     BUILD_SHA="${GIT_SHA}" \
     PYTHONDONTWRITEBYTECODE=1 \
