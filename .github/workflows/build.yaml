@@ -69,6 +69,7 @@ jobs:
 
       - name: Run basic tests
         run: |
+          apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
           docker run --rm ${{ env.REGISTRY }}/${{ env.GHCR_REPO }}@${{ steps.build.outputs.digest }} \
             curl -f http://localhost:8000/health || exit 1
 
