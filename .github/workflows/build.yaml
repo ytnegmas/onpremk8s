@@ -1,0 +1,40 @@
+name: Build Apps
+run-name: Build simple webapp
+
+permissions:
+  contents: read  # This is required for actions/checkout
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ opened, synchronize, reopened, ready_for_review ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/simple-webapp
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: |
+          GIT_SHA=$(git rev-parse --short HEAD)
+          docker build -t "ghcr.io/ORG/simple-webapp:${GIT_SHA}" --build-arg "GIT_SHA=${GIT_SHA}" .
+
+      - name: Scan image
+        run: |
+          sudo apt-get install wget gnupg
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy
+
+      - name: Run container
+        run: |
+          docker run -d --rm --name simple-webapp -p 8000:8000 ghcr.io/ORG/simple-webapp:$(git rev-parse --short HEAD)
+          sleep 3
+
+      - name: Test /info
+        run: curl -s http://localhost:8000/info

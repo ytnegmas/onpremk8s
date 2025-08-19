@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx
+  namespace: argocd
+spec:
+  project: onprem
+  source:
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    chart: ingress-nginx
+    targetRevision: 4.11.3
+    helm:
+      values: |
+        controller:
+          ingressClassResource:
+            name: nginx
+            default: true
+          ingressClassByName: true
+
+          service:
+            type: LoadBalancer
+
+          config:
+            use-forwarded-headers: "true"
+            enable-real-ip: "true"
+            proxy-body-size: "10m"
+            proxy-read-timeout: "60"
+            proxy-send-timeout: "60"
+
+          metrics:
+            enabled: true
+            serviceMonitor:
+              enabled: false
+
+          # Pod security stuff
+          allowSnippetAnnotations: false
+          podAnnotations:
+            prometheus.io/scrape: "true"
+            prometheus.io/port: "10254"
+
+        defaultBackend:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ingress-nginx
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

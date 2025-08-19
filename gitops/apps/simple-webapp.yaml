@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: simple-webapp
+  namespace: argocd
+spec:
+  project: onprem
+  source:
+    repoURL: https://github.com/ytnegmas/onpremk8s
+    targetRevision: main
+    path: gitops/helm/simple-webapp
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
