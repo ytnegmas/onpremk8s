@@ -6,6 +6,7 @@ ENV APP_NAME="simple-webapp" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
+# Docker inspect help
 LABEL org.opencontainers.image.title="simple-webapp" \
       org.opencontainers.image.revision="${GIT_SHA}"
 
