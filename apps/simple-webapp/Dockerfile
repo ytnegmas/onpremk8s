@@ -10,7 +10,7 @@ LABEL org.opencontainers.image.title="simple-webapp" \
       org.opencontainers.image.revision="${GIT_SHA}"
 
 # non root for security
-RUN useradd -u 10001 -m appuser
+RUN adduser -u 1001 -D appuser
 
 WORKDIR /app
 COPY requirements.txt .
@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app.py .
 
-USER appuser
+USER 1001
 
 EXPOSE 8000
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "--threads", "4", "app:app"]
