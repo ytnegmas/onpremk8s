@@ -70,8 +70,12 @@ jobs:
       - name: Run basic tests
         run: |
           sudo apt-get update && sudo apt-get install -y curl
-          docker run --rm ${{ env.REGISTRY }}/${{ env.GHCR_REPO }}@${{ steps.build.outputs.digest }} \
-            curl -f http://localhost:8000/health || exit 1
+          docker run -d --rm -p 8000:8000 --name webapp \
+            ${{ env.REGISTRY }}/${{ env.GHCR_REPO }}@${{ steps.build.outputs.digest }}
+
+          sleep 10
+
+          curl -f http://localhost:8000/health || exit 1
 
       - name: Trivy scan
         uses: aquasecurity/trivy-action@0.20.0
