@@ -27,3 +27,22 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tailscale-resources
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ytnegmas/onpremk8s
+    targetRevision: main
+    path: gitops/infra/tailscale
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
