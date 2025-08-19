@@ -1,0 +1,10 @@
+apiVersion: tailscale.com/v1alpha1
+kind: Ingress
+metadata:
+  name: simple-webapp
+  namespace: app
+spec:
+  targetService:
+    name: simple-webapp
+    port: 8000
+  hostname: app

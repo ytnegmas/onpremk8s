@@ -53,3 +53,27 @@ argo-install:
 
 	kubectl apply -n argocd -f gitops/argocd-project.yaml
 	kubectl apply -n argocd -f gitops/root-app.yaml
+
+.PHONY: ghcr-secret-setup
+ghcr-secret-setup:
+	@if [ -z "$$GITHUB_TOKEN" ]; then \
+		echo "GITHUB_TOKEN environment variable not set"; \
+		exit 1; \
+	fi
+	kubectl create ns app || true
+	kubectl create secret docker-registry ghcr-secret \
+		--docker-server=ghcr.io \
+		--docker-username=ytnegmas \
+		--docker-password=$$GITHUB_TOKEN \
+		--namespace=app
+
+.PHONY: tailscale-secret-setup
+tailscale-secret-setup:
+	@if [ -z "$$TS_AUTHKEY" ]; then \
+		echo "TS_AUTHKEY environment variable not set"; \
+		exit 1; \
+	fi
+	kubectl create ns tailscale || true
+	kubectl create secret generic tailscale-auth \
+		--from-literal=TS_AUTHKEY=$$TS_AUTHKEY \
+		-n tailscale --dry-run=client -o yaml | kubectl apply -f -

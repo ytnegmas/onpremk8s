@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tailscale-operator
+  namespace: argocd
+spec:
+  project: on-prem
+
+  source:
+    repoURL: https://pkgs.tailscale.com/helmcharts
+    chart: tailscale-operator
+    targetRevision: 1.72.1
+    helm:
+      releaseName: tailscale-operator
+      values: |
+        authKeySecret:
+          name: tailscale-auth
+          key: TS_AUTHKEY
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tailscale
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tailscale-resources
+  namespace: argocd
+spec:
+  project: on-prem
+  source:
+    repoURL: https://github.com/sgenty/apqx/onpremk8s.git
+    targetRevision: main
+    path: gitops/infra/tailscale
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

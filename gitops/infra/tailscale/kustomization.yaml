@@ -1,0 +1,2 @@
+resources:
+  - ingress-simple-webapp.yaml
