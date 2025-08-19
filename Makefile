@@ -69,11 +69,16 @@ ghcr-secret-setup:
 
 .PHONY: tailscale-secret-setup
 tailscale-secret-setup:
-	@if [ -z "$$TS_AUTHKEY" ]; then \
-		echo "TS_AUTHKEY environment variable not set"; \
+	@if [ -z "$$TS_CLIENT_OAUTH_ID" ]; then \
+		echo "TS_CLIENT_OAUTH_ID environment variable not set"; \
+		exit 1; \
+	fi
+	@if [ -z "$$TS_SECRET_OAUTH_KEY" ]; then \
+		echo "TS_SECRET_OAUTH_KEY environment variable not set"; \
 		exit 1; \
 	fi
 	kubectl create ns tailscale || true
-	kubectl create secret generic tailscale-auth \
-		--from-literal=TS_AUTHKEY=$$TS_AUTHKEY \
-		-n tailscale --dry-run=client -o yaml | kubectl apply -f -
+	kubectl create secret generic operator-oauth \
+		--from-literal=client_id=$$TS_CLIENT_OAUTH_ID \
+		--from-literal=client_secret=$$TS_SECRET_OAUTH_KEY \
+		-n tailscale
