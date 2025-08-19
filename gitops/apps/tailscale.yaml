@@ -34,7 +34,7 @@ metadata:
   name: tailscale-resources
   namespace: argocd
 spec:
-  project: default
+  project: on-prem
   source:
     repoURL: https://github.com/ytnegmas/onpremk8s
     targetRevision: main
