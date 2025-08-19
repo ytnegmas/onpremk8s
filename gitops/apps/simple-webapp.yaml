@@ -4,7 +4,7 @@ metadata:
   name: simple-webapp
   namespace: argocd
 spec:
-  project: onprem
+  project: on-prem
   source:
     repoURL: https://github.com/ytnegmas/onpremk8s
     targetRevision: main
