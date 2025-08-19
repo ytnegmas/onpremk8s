@@ -53,7 +53,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            BUILD_SHA=${{ github.sha }}
+            BUILD_SHA=${{ steps.build.outputs.digest }}
 
       # Stetch goal, so we verify that the image truly came from my GitHub Actions workflow (Kyverno)
       - name: Generate provenance attestation
