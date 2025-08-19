@@ -13,7 +13,7 @@ spec:
     helm:
       releaseName: tailscale-operator
       values: |
-        authKeySecret:
+        authKey:
           name: tailscale-auth
           key: TS_AUTHKEY
 
