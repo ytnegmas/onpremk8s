@@ -65,9 +65,8 @@ service:
 ingress:
   enabled: true
   className: "tailscale"
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  annotations:
+    tailscale.com/funnel: "true"
   hosts:
     - host: simple-webapp
       paths:
