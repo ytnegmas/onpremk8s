@@ -55,6 +55,7 @@ jobs:
           build-args: |
             BUILD_SHA=${{ github.sha }}
 
+      # Stetch goal, so we verify that the image truly came from my GitHub Actions workflow (Kyverno)
       - name: Generate provenance attestation
         uses: actions/attest-build-provenance@v2
         with:
@@ -65,3 +66,28 @@ jobs:
       - name: Show digest (use this in GitOps)
         run: |
           echo "Pushed: ${{ env.REGISTRY }}/${{ env.GHCR_REPO }}@${{ steps.build.outputs.digest }}"
+
+      - name: Run basic tests
+        run: |
+          docker run --rm ${{ env.REGISTRY }}/${{ env.GHCR_REPO }}@${{ steps.build.outputs.digest }} \
+            curl -f http://localhost:8000/health || exit 1
+
+      - name: Trivy scan
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.GHCR_REPO }}@${{ steps.build.outputs.digest }}
+          format: table
+          exit-code: 1
+          ignore-unfixed: true
+
+      - name: Update values.yaml with digest
+        run: |
+          sed -i "s|digest:.*|digest: \"${{ steps.build.outputs.digest }}\"|" ./gitops/helm/simple-webapp/values.yaml
+
+      - name: Commit and push updated digest
+        run: |
+          git config user.name "ytnegsam"
+          git config user.email "ytnegsam@gmail.com"
+          git add ./gitops/helm/simple-webapp/values.yaml
+          git commit -m "Update simple-webapp digest to ${{ steps.build.outputs.digest }}"
+          git push
