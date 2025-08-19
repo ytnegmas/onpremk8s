@@ -50,3 +50,6 @@ argo-install:
 		--namespace argocd \
 		--create-namespace \
 		--version 8.3.0
+
+	kubectl apply -n argocd -f gitops/argocd-project.yaml
+	kubectl apply -n argocd -f gitops/root-app.yaml
