@@ -1,4 +1,4 @@
-REGISTRY ?= ghcr.io/MAkE_ONE
+REGISTRY ?= ghcr.io/ytnegmas/onpremk8s
 APP_NAME ?= simple-webapp
 GIT_SHA  := $(shell git rev-parse --short HEAD)
 IMAGE    := $(REGISTRY)/$(APP_NAME):$(GIT_SHA)
