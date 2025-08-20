@@ -50,12 +50,14 @@ I set up automation to build the container image in the `apps/simple-webapp` dir
 * leverages the `sha:` digest and commits it into the helm chart values, which then inturn updates the digest in k3s via gitops automatically
 
 ## Other Items of note
-* Leveraged the Tailscale kubernetes operator (installed via ArgoCD) and configured tailscale to leverage magic DNS and TLS to allow for public access of the ingress
-  * When my k3s cluster is spun up, the url is [https://simple-webapp.tail948a3d.ts.net/info](https://simple-webapp.tail948a3d.ts.net/info)
-* I kept all my secrets local to my machine to initialize in k3s, and did not pass secrets via CI. This was the easiest way to prevent committing secrets but there are more mature way of doing this
-* Added self hosted runners in the same k3s cluster by using the `actions-runner-controller` operator. This is working by having a ephermeral pods in k3s be a target for a GHA jobs. Confirmed working in my personal github account
-  * found in `gitops/apps/self-hosted-runners.yaml` and `gitops/apps/arc-runners`
-  * A dependency was `cert-manager` so that was also installed
+* Leveraged the Tailscale Kubernetes operator (installed via ArgoCD) and configured Tailscale to use Magic DNS and TLS, enabling public access to the ingress.
+  * When the k3s cluster is running, the application is available at: [https://simple-webapp.tail948a3d.ts.net/info](https://simple-webapp.tail948a3d.ts.net/info)
+
+* Kept all secrets local to my machine for initialization in k3s, rather than passing them through CI. This was the simplest way to avoid committing secrets, though there are more mature approaches to secret management.
+
+* Added self-hosted runners in the same k3s cluster using the `actions-runner-controller` operator. This works by running ephemeral pods in k3s as targets for GitHub Actions jobs. Verified functionality in my personal GitHub account.
+  * Configuration is located in [gitops/apps/self-hosted-runners.yaml](gitops/apps/self-hosted-runners.yaml) and [gitops/apps/arc-runners](gitops/apps/arc-runners)
+  * A dependency for this setup was cert-manager, which was also installed
 
 # Architecture
 <img src="diagram.png" alt="Architecture Diagram" width="600"/>
