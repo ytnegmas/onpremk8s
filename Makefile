@@ -86,3 +86,10 @@ actions-runner-secret-setup:
 
 .PHONY: secrets
 secrets: ghcr-secret-setup tailscale-secret-setup actions-runner-secret-setup
+
+.PHONY: list-targets
+list-targets:
+	@echo "Available targets:"
+	@grep -E '^[a-zA-Z0-9._-]+:([^=]|$$)' Makefile \
+	  | awk -F':' '{print "  -", $$1}' \
+	  | sort -u

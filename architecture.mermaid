@@ -1,0 +1,49 @@
+flowchart TD
+
+  subgraph Dev["Developer + GitHub"]
+    GHub["GitHub Repo (Source + Manifests)"]
+    GAct["GitHub Actions (CI/CD)"]
+    GHCR["GHCR (GitHub Container Registry)"]
+  end
+
+  subgraph Cluster["Kubernetes Cluster (k3s)"]
+
+    subgraph ArgoCD["argocd ns"]
+      AServer["argocd-server"]
+      ARepo["argocd-repo-server"]
+      AApp["argocd-application-controller"]
+    end
+
+    subgraph App["app ns"]
+      Web["simple-webapp"]
+    end
+
+    subgraph Runners["actions-runner-system ns"]
+      ARC["actions-runner-controller"]
+      Runner["self-hosted runners"]
+    end
+
+    subgraph TLS["cert-manager ns"]
+      CertMgr["cert-manager"]
+    end
+
+    subgraph Tailscale["tailscale ns"]
+      TSOp["Tailscale Operator"]
+      TSProxy["Tailscale Proxy Pod"]
+    end
+  end
+
+  %% Flow
+  GHub -->|"push code"| GAct
+  GAct -->|"build + scan"| GHCR
+  GAct -->|"commit manifest update"| GHub
+  GHCR -->|"images"| ArgoCD
+  GHub -->|"manifests"| ArgoCD
+
+  ArgoCD -->|"sync apps"| Web
+  ArgoCD -->|"sync tailscale"| TSOp
+  ArgoCD -->|"sync cert-manager"| CertMgr
+  ArgoCD -->|"sync ARC"| ARC
+
+  TSOp --> TSProxy --> Web
+  CertMgr -->|"GHA certs"| ARC
