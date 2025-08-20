@@ -18,24 +18,3 @@ spec:
     automated:
       prune: true
       selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: infra-root
-  namespace: argocd
-spec:
-  project: on-prem
-  source:
-    repoURL: https://github.com/ytnegmas/onpremk8s
-    targetRevision: main
-    path: gitops/infra
-    directory:
-      recurse: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: argocd
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
