@@ -2,8 +2,9 @@
 
 
 ## Cluster Bootstrap Notes
-* I decided to use k3s for setting up a local k8s cluster on my personal desktop computer inside of WSL (Windows Subsystem for Linux)
-* I initially chose to start with an nginx-ingress controller, but moved to use Tailscale as it had easy to use hooks for exposing to external news with some TLS and DNS nice-ities
+* I chose k3s to run a lightweight local Kubernetes cluster on my personal desktop, inside Windows Subsystem for Linux (WSL).
+
+* At first, I tried using an nginx ingress controller, but I switched to Tailscale because it provided simpler hooks for external access along with built-in TLS and DNS support.
 
 #### Initial setup
 Used a make file for automating the k3s provisioning and setup. I disabled traefik as i dont want to use that ingress controller built into k3s. In addition to the k3s setup I added the following to the make file to initialize the k3s cluster
