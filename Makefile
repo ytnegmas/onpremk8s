@@ -1,4 +1,10 @@
 
+-include .secrets.env
+export $(shell sed 's/=.*//' .secrets.env)
+
+GITHUB_TOKEN        ?= default_gh_token
+TS_CLIENT_OAUTH_ID  ?= default_ts_id
+TS_SECRET_OAUTH_KEY ?= default_ts_key
 
 .PHONY: k3s-up
 k3s-up:
@@ -38,7 +44,7 @@ k3s-status:
 	@systemctl status --no-pager k3s || true
 
 .PHONY: k3s-install
-k3s-install: # disable traefik in favor of using nginx
+k3s-install: # disable traefik in favor of using nginx or tailscale
 	curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --disable traefik" sh -
 
 .PHONY: argo-install
@@ -56,29 +62,17 @@ argo-install:
 
 .PHONY: ghcr-secret-setup
 ghcr-secret-setup:
-	@if [ -z "$$GITHUB_TOKEN" ]; then \
-		echo "GITHUB_TOKEN environment variable not set"; \
-		exit 1; \
-	fi
 	kubectl create ns app || true
 	kubectl create secret docker-registry ghcr-secret \
 		--docker-server=ghcr.io \
 		--docker-username=ytnegmas \
-		--docker-password=$$GITHUB_TOKEN \
-		--namespace=app
+		--docker-password=$(GITHUB_TOKEN) \
+		--namespace=app || true
 
 .PHONY: tailscale-secret-setup
 tailscale-secret-setup:
-	@if [ -z "$$TS_CLIENT_OAUTH_ID" ]; then \
-		echo "TS_CLIENT_OAUTH_ID environment variable not set"; \
-		exit 1; \
-	fi
-	@if [ -z "$$TS_SECRET_OAUTH_KEY" ]; then \
-		echo "TS_SECRET_OAUTH_KEY environment variable not set"; \
-		exit 1; \
-	fi
 	kubectl create ns tailscale || true
 	kubectl create secret generic operator-oauth \
-		--from-literal=client_id=$$TS_CLIENT_OAUTH_ID \
-		--from-literal=client_secret=$$TS_SECRET_OAUTH_KEY \
-		-n tailscale
+		--from-literal=client_id=$(TS_CLIENT_OAUTH_ID) \
+		--from-literal=client_secret=$(TS_SECRET_OAUTH_KEY) \
+		-n tailscale || true

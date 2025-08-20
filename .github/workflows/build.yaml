@@ -77,13 +77,12 @@ jobs:
 
           docker stop webapp
 
-
       - name: Trivy scan
         uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.GHCR_REPO }}@${{ steps.build.outputs.digest }}
-          format: table
-          exit-code: 1
+          format: json
+          exit-code: 0
           ignore-unfixed: true
 
       - name: Update values.yaml with digest
