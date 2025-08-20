@@ -9,6 +9,9 @@ app = Flask(__name__)
 APP_NAME = os.getenv("APP_NAME", "simple-webapp")
 BUILD_SHA = os.getenv("BUILD_SHA", "unknown")
 
+
+#####################################
+# -----------------------------------
 # Observability instrumentation
 class JsonFormatter(logging.Formatter):
     def format(self, record):
@@ -30,7 +33,8 @@ metrics.info("simple_webapp", "Simple Webapp info", version=BUILD_SHA)
 
 app.logger.addHandler(handler)
 app.logger.setLevel(logging.INFO)
-###
+# -----------------------------------
+#####################################
 
 @app.get("/info")
 def info():

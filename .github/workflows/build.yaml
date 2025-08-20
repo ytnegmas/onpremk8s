@@ -52,8 +52,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: |
-            BUILD_SHA=${{ steps.build.outputs.digest }}
 
       # Stetch goal, so we verify that the image truly came from my GitHub Actions workflow (Kyverno)
       - name: Generate provenance attestation
@@ -67,7 +65,7 @@ jobs:
         run: |
           echo "Pushed: ${{ env.REGISTRY }}/${{ env.GHCR_REPO }}@${{ steps.build.outputs.digest }}"
 
-      - name: Run basic tests
+      - name: Run tests
         run: |
           sudo apt-get update && sudo apt-get install -y curl
           docker run -d --rm -p 8000:8000 --name webapp \
@@ -75,7 +73,10 @@ jobs:
 
           sleep 10
 
-          curl -f http://localhost:8000/health || exit 1
+          curl -f http://localhost:8000/info || exit 1
+
+          docker stop webapp
+
 
       - name: Trivy scan
         uses: aquasecurity/trivy-action@0.20.0

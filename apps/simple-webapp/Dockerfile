@@ -1,14 +1,9 @@
 FROM python:3.12-slim
 
-ARG BUILD_SHA=unknown
+# Don't write .pyc and don't buffer stdout
 ENV APP_NAME="simple-webapp" \
-    BUILD_SHA="${GIT_SHA}" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
-
-# Docker inspect help
-LABEL org.opencontainers.image.title="simple-webapp" \
-      org.opencontainers.image.revision="${GIT_SHA}"
 
 # non root for security
 RUN groupadd -g 1001 appgroup \

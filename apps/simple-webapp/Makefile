@@ -8,9 +8,7 @@ IMAGE    := $(REGISTRY)/$(APP_NAME):$(GIT_SHA)
 all: build run test
 
 build:
-	docker build \
-	  -t $(IMAGE) \
-	  --build-arg GIT_SHA=$(GIT_SHA) .
+	docker buildx build -t $(IMAGE) . --load
 
 test:
 	curl -s http://localhost:8000/info | tee response.json
