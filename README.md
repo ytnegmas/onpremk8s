@@ -53,7 +53,7 @@ I set up automation to build the container image in the `apps/simple-webapp` dir
   * A dependency was `cert-manager` so that was also installed
 
 # Architecture
-<img src="diagram.png" alt="Architecture Diagram" width="600"/>git r#### Logs
+<img src="diagram.png" alt="Architecture Diagram" width="600"/>
 
 #### Logs
 ```
