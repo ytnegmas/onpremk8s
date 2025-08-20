@@ -53,4 +53,26 @@ I set up automation to build the container image in the `apps/simple-webapp` dir
   * A dependency was `cert-manager` so that was also installed
 
 # Architecture
-<img src="diagram.png" alt="Architecture Diagram" width="600"/>
+<img src="diagram.png" alt="Architecture Diagram" width="600"/>git r#### Logs
+
+#### Logs
+```
+kubectl get all -n app
+NAME                                 READY   STATUS    RESTARTS   AGE
+pod/simple-webapp-58c9cb8f96-k7z6w   1/1     Running   0          12m
+
+NAME                    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+service/simple-webapp   ClusterIP   10.43.113.139   <none>        8000/TCP   10h
+
+NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/simple-webapp   1/1     1            1           10h
+
+NAME                                       DESIRED   CURRENT   READY   AGE
+replicaset.apps/simple-webapp-58c9cb8f96   1         1         1       12m
+
+NAME                                                REFERENCE                  TARGETS                        MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/simple-webapp   Deployment/simple-webapp   cpu: 2%/80%, memory: 75%/80%   1         4         1          9h
+
+NAMESPACE   NAME                MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
+app         simple-webapp-pdb   2               N/A               0                     9h
+```
