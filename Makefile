@@ -93,3 +93,6 @@ list-targets:
 	@grep -E '^[a-zA-Z0-9._-]+:([^=]|$$)' Makefile \
 	  | awk -F':' '{print "  -", $$1}' \
 	  | sort -u
+
+.PHONY: all
+all: k3s-install argo-install secrets

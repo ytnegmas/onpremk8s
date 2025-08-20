@@ -16,9 +16,7 @@ commands to setup the entirety of k3s for argocd hand-off. pre-reqs: `kubectl, c
 ```
 cp .secrets.env.example .secrets.env
 # Fill out .secrets.env with PAT token from github and OAUTH credentials from tailscale
-make k3s-install
-make argo-install
-make secrets
+make all
 ```
 
 Once these steps were complete, the rest of the service deployments were managed by using GitOps going forward from the `gitops/apps` directory and committing to the `main` branch

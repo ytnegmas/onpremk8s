@@ -121,3 +121,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+pdb:
+  minAvailable: 2
