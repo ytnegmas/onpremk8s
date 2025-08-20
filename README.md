@@ -4,7 +4,7 @@
 ## Cluster Bootstrap Notes
 * I chose k3s to run a lightweight local Kubernetes cluster on my personal desktop, inside Windows Subsystem for Linux (WSL).
 
-* At first, I tried using an nginx ingress controller, but I switched to Tailscale because it provided simpler hooks for external access along with built-in TLS and DNS support.
+* At first, I tried using an nginx ingress controller with external-dns + lets-encrypt, but I switched to Tailscale because it provided simpler hooks for external access along with built-in TLS and DNS support.
 
 #### Initial setup
 Used a make file for automating the k3s provisioning and setup. I disabled traefik as i dont want to use that ingress controller built into k3s. In addition to the k3s setup I added the following to the make file to initialize the k3s cluster
@@ -24,9 +24,9 @@ make secrets
 Once these steps were complete, the rest of the service deployments were managed by using GitOps going forward from the `gitops/apps` directory and committing to the `main` branch
 
 ## Simple-webapp
-I made a simple python flask app with some basic instrumention for prometheus  and the necessary readniess/liveness probes for k8s. I also added the `/info` path for the necessary requirements. Example json return from the python flask app running in my local k3s, networked via the tailscale operator.
+I made a simple python flask app with some basic instrumention for prometheus and the necessary readniess/liveness probes for k8s. I also added the `/info` path for the necessary requirements. Example json return from the python flask app running in my local k3s, networked via the tailscale operator.
 The url is `https://simple-webapp.tail948a3d.ts.net/info` which is publicly accessible when k3s is spun up
-
+See source code at `apps/simple-webapp/app.py`
 ```
 curl https://simple-webapp.tail948a3d.ts.net/info
 {"app":"simple-webapp","build_sha":"sha256:b33c61641a24a56fff02ccec5d4e7809cd258a22185a4105c4c698be2d701126","timestamp":"2025-08-20T03:25:25.167367+00:00"}
