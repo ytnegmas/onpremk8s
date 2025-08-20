@@ -76,3 +76,13 @@ tailscale-secret-setup:
 		--from-literal=client_id=$(TS_CLIENT_OAUTH_ID) \
 		--from-literal=client_secret=$(TS_SECRET_OAUTH_KEY) \
 		-n tailscale || true
+
+.PHONY: actions-runner-secret-setup
+actions-runner-secret-setup:
+	kubectl create ns actions-runner-system || true
+	kubectl create secret generic controller-manager \
+		--namespace actions-runner-system \
+		--from-literal=github_token=$(GITHUB_TOKEN) || true
+
+.PHONY: secrets
+secrets: ghcr-secret-setup tailscale-secret-setup actions-runner-secret-setup

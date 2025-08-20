@@ -9,6 +9,7 @@ spec:
     - https://github.com/ytnegmas/onpremk8s
     - https://kubernetes.github.io/ingress-nginx
     - https://pkgs.tailscale.com/*
+    - https://actions-runner-controller.github.io/actions-runner-controller
   destinations:
     - namespace: '*'
       server: https://kubernetes.default.svc
