@@ -11,6 +11,7 @@ spec:
     targetRevision: 0.23.3
     helm:
       values: |
+        installCRDs: true
         authSecret:
           create: false
           name: controller-manager
