@@ -7,12 +7,17 @@
 * At first, I tried using an nginx ingress controller with external-dns + lets-encrypt, but I switched to Tailscale because it provided simpler hooks for external access along with built-in TLS and DNS support.
 
 #### Initial setup
-Used a make file for automating the k3s provisioning and setup. I disabled traefik as i dont want to use that ingress controller built into k3s. In addition to the k3s setup I added the following to the make file to initialize the k3s cluster
-* Source and installed pertinent secrets from `.secrets.env.example` into k3s
-* Sourced the kubeconfig into the users home directory for kube api access via local host
-* Installed argocd into k3s, and intializing it with a root project and app, pointing to this publis repository
+I used a Makefile to automate the k3s provisioning and setup. I disabled Traefik since I didn’t want to use the ingress controller that comes bundled with k3s. In addition to the basic k3s setup, the Makefile includes steps to initialize the cluster:
 
-commands to setup the entirety of k3s for argocd hand-off. pre-reqs: `kubectl, cmake, curl`
+* Load and install secrets from .secrets.env.example into k3s.
+
+* Configure the kubeconfig in the user’s home directory for local API access.
+
+* Install Argo CD in the k3s cluster, initializing it with a root project and application pointing to this public repository.
+
+The Makefile provides commands to fully provision k3s and prepare it for Argo CD hand-off.
+
+Prerequisites: `kubectl, cmake, curl`
 ```
 cp .secrets.env.example .secrets.env
 # Fill out .secrets.env with PAT token from github and OAUTH credentials from tailscale
