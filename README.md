@@ -38,7 +38,7 @@ curl https://simple-webapp.tail948a3d.ts.net/info
 I used a helm chart to ArgoCD deploy this simple-webapp from the directory gitops/helm/simple-webapp. Some key notes:
 * I pinned the helm chart to use the `sha:` digest for pulling images
 * I forced the container to use nonRoot and to run as a specific numeric user
-* I removed the automounting of service account tokens and gave no RBAC to the service account
+* I removed the automounting of service account tokens and gave no RBAC to the service accoun
 * I adjusted resources and requests on the deployments along with a default HPA setup (80% usage)
 
 ## Container Build
